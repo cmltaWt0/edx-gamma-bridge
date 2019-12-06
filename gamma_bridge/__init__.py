@@ -1,7 +1,7 @@
 """
 Add GamificationProcessor to event tracking backends list.
 """
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 from django.conf import settings as django_settings
 

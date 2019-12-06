@@ -17,3 +17,7 @@ RG_GAMIFICATION_TRACKING_BACKENDS = {
 
 
 GAMMA_API_SUFFIX = '/api/{}/gamma-profile/'.format(GAMMA_API_VERSION)
+
+# TODO: Move this settings into the Edx settings.
+GAMMA_FIRST_SLEEP_INTERVAL = 2
+GAMMA_CELERY_MAX_RETRIES = 10

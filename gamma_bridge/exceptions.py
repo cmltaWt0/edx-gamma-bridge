@@ -20,3 +20,23 @@ class GammaConnectionError(GammaException):
     def __init__(self, message=None, *args):
         self.message = "External connection error to the rg-gamification-traking application. {}".format(message)
         super(GammaConnectionError, self).__init__(self.message, *args)
+
+
+class GammaValueError(GammaException, ValueError):
+    """
+    Base class for Gamma ValueError.
+    """
+
+    def __init__(self, message=None, *args):
+        self.message = "Wrong type of value. {}".format(message)
+        super(GammaException, self).__init__(self.message, *args)
+
+
+class NotBaseStorageError(GammaValueError):
+    """
+    Error related to work with BaseStorage type.
+    """
+
+    def __init__(self, message=None, *args):
+        self.message = "The value type must be BaseStorage. {}".format(message)
+        super(GammaException, self).__init__(self.message, *args)

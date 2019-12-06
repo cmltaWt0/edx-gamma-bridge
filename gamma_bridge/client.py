@@ -1,16 +1,14 @@
 """Gamification Client to send payload data."""
-import json
-import socket
 import logging
-import importlib
 
-from django.conf import settings
+from django.conf import settings as django_settings
 
-from gamma_bridge.storage import GammaStorage
-from gamma_bridge import exceptions
+from gamma_bridge import settings
+from gamma_bridge.tasks import publish_event_to_gamma
 
+LOGGER = logging.getLogger(__name__)
 
-GAMIFICATION_CONF = settings.FEATURES.get('RG_GAMIFICATION')
+GAMIFICATION_CONF = django_settings.FEATURES.get('RG_GAMIFICATION')
 params = dict()
 
 if (GAMIFICATION_CONF and GAMIFICATION_CONF.get('ENABLED') == True and
@@ -24,10 +22,6 @@ if (GAMIFICATION_CONF and GAMIFICATION_CONF.get('ENABLED') == True and
     })
 
 
-LOGGER = logging.getLogger(__name__)
-g_storage = GammaStorage(**params)
-
-
 class GamificationPublisher(object):
     """
     Gamification publisher.
@@ -39,27 +33,7 @@ class GamificationPublisher(object):
         params:
         event gamification event
         """
-        try:
-            g_resp = g_storage.save(event)
-        except socket.gaierror as e:  # can't connect at all, no response
-            raise exceptions.GammaConnectionError(message=event)
-
-        if g_resp is None:
-            return
-
-        if g_resp.status_code == 200:
-            LOGGER.info("Succeeded sending statement {}".format(event))
-        elif g_storage.response_has_errors(g_resp):
-            if g_storage.response_has_storage_errors(g_resp):
-                LOGGER.info(
-                    "Storage error during saving event statement {}/{} Details: {}".format
-                    (event.get('username'), event.get('event_type'), g_resp.content))
-            elif g_storage.request_unauthorised(g_resp):
-                LOGGER.info("Unauthorized request during saving event statement {}/{} Details: {}".format
-                    (event.get('username'), event.get('event_type'), g_resp.content))
-            else:
-                LOGGER.info("Error during saving event statement {}/{} Details: {}".format
-                    (event.get('username'), event.get('event_type'), g_resp.content))
+        publish_event_to_gamma(params, event, settings.GAMMA_FIRST_SLEEP_INTERVAL)
 
 
 publisher = GamificationPublisher()
