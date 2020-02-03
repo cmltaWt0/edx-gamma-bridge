@@ -17,8 +17,8 @@ if (GAMIFICATION_CONF and GAMIFICATION_CONF.get('ENABLED') == True and
     params.update({
         'enabled': True,
         'endpoint': GAMIFICATION_CONF.get('RG_GAMIFICATION_ENDPOINT'),
-        'secret': GAMIFICATION_CONF.get('KEY'),
-        'key': GAMIFICATION_CONF.get('SECRET')
+        'secret': GAMIFICATION_CONF.get('SECRET'),
+        'key': GAMIFICATION_CONF.get('KEY')
     })
 
 
