@@ -3,8 +3,22 @@ from abc import ABCMeta, abstractmethod
 import json
 import re
 
+import hashlib
+
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
+
+
+class SHA1UIDStrategy(object):
+    """
+    Default strategy for handling event's UID.
+
+    Goal is to return the same hex data for any length UID.
+
+    :return: hexdigest of _hashlib.HASH
+    """
+    def handle(self, uid):
+        return hashlib.sha1(uid).hexdigest()
 
 
 class BaseGammaEvent(object):
@@ -12,6 +26,9 @@ class BaseGammaEvent(object):
     Base class for Gamification Event Logs.
     """
     __metaclass__ = ABCMeta
+
+    # TODO: setup a desired strategy via settings
+    UID = SHA1UIDStrategy()
 
     def __init__(self, event, *args, **kwargs):
         """
@@ -22,7 +39,7 @@ class BaseGammaEvent(object):
             username=self.get_username(event),
             course_id=self.get_course_id(event),
             org=self.get_org(event),
-            uid=self.get_uid(event),
+            uid=self.UID.handle(self.get_uid(event)),
             event=json.dumps(self.get_event(event), cls=DjangoJSONEncoder) if settings.DEBUG else None,
             context=json.dumps(self.get_context(event), cls=DjangoJSONEncoder) if settings.DEBUG else None,
             full_event=json.dumps(event, cls=DjangoJSONEncoder) if settings.DEBUG else None,
