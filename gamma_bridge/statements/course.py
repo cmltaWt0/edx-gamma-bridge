@@ -3,9 +3,10 @@ from . base import BaseGammaEvent
 
 class BaseCourse(BaseGammaEvent):
     def get_uid(self, event):
-        event_dict =  event.get('event', {})
+        event_dict = event.get('event', {})
         if event_dict:
-            uid = '{}:{}:{}'.format(
+            uid = '{}:{}:{}:{}'.format(
+                self.__class__.__name__,
                 event_dict.get('course_id', ''),
                 event_dict.get('user_id', ''),
                 event_dict.get('mode', '')

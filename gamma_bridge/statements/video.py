@@ -3,35 +3,41 @@ import json
 from . base import BaseGammaEvent
 
 
-class BaseCourse(BaseGammaEvent):
+class BaseVideo(BaseGammaEvent):
     def get_uid(self, event):
-        event_dict =  event.get('event', {})
+        event_dict = event.get('event', '{}')
         event_dict = json.loads(event_dict)
-        return event_dict.get('id', '') if event_dict else ''
-    
+        if event_dict:
+            uid = '{}:{}:{}'.format(
+                self.__class__.__name__,
+                self.get_course_id(event),
+                event_dict.get('id', ''),
+            )
+        return uid or ''
+
     def is_allowed_to_save(self, event):
         return True
 
 
-class VideoStatement(BaseCourse):
+class VideoStatement(BaseVideo):
     pass
 
 
-class VideoPlayStatement(BaseCourse):
+class VideoPlayStatement(BaseVideo):
     pass
 
 
-class VideoPauseStatement(BaseCourse):
+class VideoPauseStatement(BaseVideo):
     pass
 
 
-class VideoCompleteStatement(BaseCourse):
+class VideoCompleteStatement(BaseVideo):
     pass
 
 
-class VideoSeekStatement(BaseCourse):
+class VideoSeekStatement(BaseVideo):
     pass
 
 
-class VideoTranscriptStatement(BaseCourse):
+class VideoTranscriptStatement(BaseVideo):
     pass

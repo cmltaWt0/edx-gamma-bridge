@@ -3,9 +3,10 @@ from . base import BaseGammaEvent
 
 class BaseProblem(BaseGammaEvent):
     def get_uid(self, event):
-        event_dict =  event.get('event', {})
+        event_dict = event.get('event', {})
         if event_dict:
-            uid = '{}:{}:{}'.format(
+            uid = '{}:{}:{}:{}'.format(
+                self.__class__.__name__,
                 event_dict.get('problem_id', ''),
                 self.get_course_id(event),
                 self.get_username(event)
@@ -16,11 +17,13 @@ class BaseProblem(BaseGammaEvent):
         return True
 
 
-class ProblemCheckStatement(BaseProblem):   
+class ProblemCheckStatement(BaseProblem):
+
     def get_uid(self, event):
-        event_dict =  event.get('event', {})
+        event_dict = event.get('event', {})
         if event_dict:
-            uid = '{}:{}:{}'.format(
+            uid = '{}:{}:{}:{}'.format(
+                self.__class__.__name__,
                 event_dict[0] if isinstance(event_dict, list) and len(event_dict) > 0 else event_dict,
                 self.get_course_id(event),
                 self.get_username(event)
@@ -29,6 +32,7 @@ class ProblemCheckStatement(BaseProblem):
 
     def is_allowed_to_save(self, event):
         return True
+
 
 class ProblemSubmittedStatement(BaseProblem):
     pass
