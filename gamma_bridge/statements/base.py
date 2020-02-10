@@ -8,6 +8,8 @@ import hashlib
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 
+from gamma_bridge.exceptions import GammaEventDataError
+
 
 class SHA1UIDStrategy(object):
     """
@@ -19,6 +21,17 @@ class SHA1UIDStrategy(object):
     """
     def handle(self, uid):
         return hashlib.sha1(uid).hexdigest()
+
+
+def validate_event_fields(data, required_fields_list):
+    if not isinstance(data, dict):
+        raise GammaEventDataError('"event" structure is not a dict')
+    required_fields_list = set(required_fields_list)
+    missed_fields = required_fields_list.difference(data.keys())
+    if missed_fields:
+        raise GammaEventDataError(
+            '"event" does not have required fields - {}'.format(', '.join(missed_fields))
+        )
 
 
 class BaseGammaEvent(object):

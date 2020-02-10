@@ -1,19 +1,19 @@
 import json
 
-from . base import BaseGammaEvent
+from . base import BaseGammaEvent, validate_event_fields
 
 
 class BaseVideo(BaseGammaEvent):
     def get_uid(self, event):
         event_dict = event.get('event', '{}')
         event_dict = json.loads(event_dict)
-        if event_dict:
-            uid = '{}:{}:{}'.format(
-                self.__class__.__name__,
-                self.get_course_id(event),
-                event_dict.get('id', ''),
-            )
-        return uid or ''
+        validate_event_fields(event_dict, ['id'])
+        uid = '{}:{}:{}'.format(
+            self.__class__.__name__,
+            self.get_course_id(event),
+            event_dict.get('id'),
+        )
+        return uid
 
     def is_allowed_to_save(self, event):
         return True
