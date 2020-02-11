@@ -44,7 +44,7 @@ class NotBaseStorageError(GammaValueError):
 
 class GammaEventDataError(GammaException):
     """
-    Error is occurred when tracking event don't contain data, required to build uid
+    Error is occurred when tracking event doesn't contain uid-required data.
     """
 
     def __init__(self, message=None, *args):
