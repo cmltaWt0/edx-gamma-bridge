@@ -40,3 +40,13 @@ class NotBaseStorageError(GammaValueError):
     def __init__(self, message=None, *args):
         self.message = "The value type must be BaseStorage. {}".format(message)
         super(GammaException, self).__init__(self.message, *args)
+
+
+class GammaEventDataError(GammaException):
+    """
+    Error is occurred when tracking event doesn't contain uid-required data.
+    """
+
+    def __init__(self, message=None, *args):
+        self.message = "Incorrect data: {}".format(message)
+        super(GammaException, self).__init__(self.message, *args)
