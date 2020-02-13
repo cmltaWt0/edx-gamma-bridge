@@ -1,8 +1,19 @@
 # Changelog
 
-## [Known issues]
-- Lack of any tests
-- There are no checks for problem submisions - any correctness anylysis
+## 0.0.3 (2020-01-13)
+
+### Features
+- Add default UID strategy using SHA1 hexdigest
+
+### Fixes
+- Fix swapped key/secret for gamma api
+- Fix uniqueness for events uid (#4)
+
+
+## 0.0.2 (2019-12-06)
+
+### Features
+- Move Event posting logic to the Celery task.
 
 
 ## 0.0.1 (2019-08-29)
@@ -20,3 +31,7 @@
 
 - Add context not only in debug mode
 - Add CI flow
+
+## [Known issues]
+- Lack of any tests
+- There are no checks for problem submisions - any correctness anylysis
